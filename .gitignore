@@ -1,1 +1,4 @@
 .toss.env
+__pycache__/
+*.egg-info/
+orders.json
