@@ -29,6 +29,7 @@ s.round_trips                     # list[RoundTrip] with prices, quantity, pnl, 
 
 get_performance(period="ytd")     # also "mtd", "all", "30d", "90d", ...
 get_performance(period="30d").to_dict()   # JSON-friendly
+get_performance(period="30d").one_line()  # same text as `tossperf -1`
 ```
 
 To query several periods without refetching, fetch once and pass `orders=`:
@@ -45,6 +46,7 @@ ytd = get_performance(period="ytd", orders=orders)
 
 ```bash
 tossperf --period ytd --env-file .toss.env
+tossperf -1 --period ytd                    # one line: 2026-01-01..2026-10-09  54 trades  15W 39L  win 27.8%  P&L KRW +588,986  USD -600.58
 tossperf --from-date 2026-07-01 --to-date 2026-09-30 --trades
 tossperf --orders-file orders.json          # offline, from a saved dump
 python -m tossperf ...                      # same, without installing

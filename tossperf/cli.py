@@ -24,6 +24,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--skill-dir", help="Path to the tossinvest-skill directory")
     parser.add_argument("--env-file", help="KEY=VALUE file with TOSS_API_KEY/TOSS_SECRET_KEY (e.g. .toss.env)")
     parser.add_argument("--trades", action="store_true", help="Include each round trip in the output")
+    parser.add_argument("-1", "--oneline", action="store_true", help="Print a one-line summary instead of JSON")
     args = parser.parse_args(argv)
 
     try:
@@ -36,6 +37,10 @@ def main(argv: list[str] | None = None) -> None:
         summary = get_performance(args.from_date, args.to_date, period=args.period, orders=orders)
     except (FetchError, ValueError) as exc:
         sys.exit(str(exc))
+
+    if args.oneline:
+        print(summary.one_line())
+        return
 
     out = summary.to_dict()
     out["orders_examined"] = len(orders)

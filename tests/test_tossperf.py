@@ -67,6 +67,20 @@ class PerformanceTests(unittest.TestCase):
         self.assertIsNone(s.win_rate)
         self.assertEqual(s.unmatched_sells[0].quantity, Decimal(1))
 
+    def test_one_line(self):
+        orders = [
+            order("BUY", "A", 1, 1000, "2026-01-02T10:00:00+09:00"),
+            order("SELL", "A", 1, 2500, "2026-01-03T10:00:00+09:00"),
+        ]
+        self.assertEqual(
+            get_performance("2026-01-01", "2026-01-31", orders=orders).one_line(),
+            "2026-01-01..2026-01-31  1 trade  1W 0L  win 100.0%  P&L KRW +1,500",
+        )
+        self.assertEqual(
+            get_performance("2026-02-01", "2026-02-28", orders=orders).one_line(),
+            "2026-02-01..2026-02-28  0 trades  0W 0L  win -  P&L -",
+        )
+
     def test_resolve_period(self):
         today = date(2026, 10, 9)
         self.assertEqual(resolve_period("ytd", today), (date(2026, 1, 1), today))

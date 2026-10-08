@@ -45,6 +45,15 @@ class PerformanceSummary:
         decided = self.wins + self.losses
         return self.wins / decided if decided else None
 
+    def one_line(self) -> str:
+        """e.g. '2026-01-01..2026-10-09  54 trades  15W 39L  win 27.8%  P&L KRW +588,986  USD -600.58'"""
+        period = f"{self.start or 'start'}..{self.end or 'now'}"
+        record = f"{self.wins}W {self.losses}L" + (f" {self.breakeven}BE" if self.breakeven else "")
+        rate = f"{self.win_rate:.1%}" if self.win_rate is not None else "-"
+        pnl = "  ".join(f"{cur} {amount:+,}" for cur, amount in sorted(self.pnl.items())) or "-"
+        noun = "trade" if self.trades == 1 else "trades"
+        return f"{period}  {self.trades} {noun}  {record}  win {rate}  P&L {pnl}"
+
     def to_dict(self) -> dict:
         """JSON-friendly view; money stays exact as strings."""
         return {
